@@ -71,7 +71,7 @@ Access it at `http://127.0.0.1:8050`. The dashboard loads data from `results.jso
 
 ## Visualization
 Check out the sample model comparison chart:
-![Model Comparison: Average Score and Pass Rate](images/llm_scores.png)
+![Model Comparison: Average Score](images/llm_scores.png)
 
 ## Contributing
 Contributions are welcome! Please ensure code is formatted with `black` and passes `pylint` checks. Submit pull requests with detailed descriptions.

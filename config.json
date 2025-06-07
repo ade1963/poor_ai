@@ -1,4 +1,5 @@
 {
   "display_app": "notepad",
   "display_request_response": true,
+  "templates_source_folder": "template_sources"
 }

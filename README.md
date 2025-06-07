@@ -1,125 +1,167 @@
 # Poor AI Programming Tool
 
-## Introduction
+A lightweight, console-based Python application designed to streamline development workflows by integrating AI-driven code generation with robust project management. Optimized for systems with limited resources, it offers a modular architecture, a flexible template system, and seamless project tracking, making AI-assisted coding accessible and efficient.
 
-The "Poor AI Programming Tool" is a lightweight, console-based Python application designed to help programmers leverage AI models, particularly local or less powerful ones, for coding tasks. It focuses on single-file operations but uses a flexible **template system** and **component descriptions** to provide richer context to the AI, improving the quality of generated code and fixes.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Developed with efficiency in mind, it aims to be a practical assistant without requiring high-end hardware.
+## Key Features
 
-## Features
-
-*   **Console Interface**: Simple, text-based operation via terminal.
-*   **AI Interaction**: Generate code (`gen`) or apply fixes (`fix`) using configured AI models.
-*   **Model Agnostic**: Supports multiple AI model providers (Ollama, OpenRouter) via `models.json`.
-*   **Single-File Focus**: Operates on one file at a time, keeping interactions simple.
-*   **Template System**: Define custom templates (`templates/*.txt`) to structure the context sent to the AI, including:
-    *   File contents (`{{file:path}}`)
-    *   Folder structures (`{{folder_schema:paths}}`)
-    *   Current file content (`{{current_file}}`) and name (`{{current_file_name}}`)
-    *   Component descriptions (`{{desc_short:path}}`, `{{current_desc_long}}`, etc.)
-    *   User prompts (`{{prompt}}`)
-*   **Component Descriptions**: Associate short, long, and detailed descriptions with files (`<filename>.desc.md`) to provide deeper context within templates.
-*   **Context Preview**: View the exact context that will be sent to the AI (`context show`).
-*   **Model Management**: List available models and switch between them (`model list`, `model <name>`).
-*   **Testing**: Includes a command to run integrated tests (`test`).
-*   **Request/Response Display**: Optionally display the full request and response in a configured editor for debugging (`config.json`).
+- **Console-Based Interface**: A universal text-based CLI that runs on virtually any system.
+- **Multi-File Operations**: Load, edit, and save multiple files at once with wildcard support (e.g., `load src/*.py`).
+- **Advanced Templating**: Use dynamic placeholders (`{{task}}`, `{{file_contents}}`, etc.) to build precise, context-aware prompts for the AI.
+- **Smart Project Tracking**: All project files, metadata, and descriptions are tracked in a central `project.json` file.
+- **Multi-Provider AI Support**: Seamlessly switch between AI providers like local Ollama models, cloud-based OpenRouter models, or a 'fake' provider for offline work and testing.
+- **Robust File Handling**: Includes automatic change detection, directory creation, and the ability to apply AI-generated diff patches.
+- **Intelligent Response Parsing**: Automatically extracts structured data (files, code, descriptions) from AI responses, with smart fallbacks for various formats.
+- **Comprehensive Logging**: Detailed logs for all major operations, ensuring full traceability and easier debugging.
 
 ## Getting Started
 
 ### Prerequisites
 
-*   Python 3.8+
-*   Access to an AI model endpoint (e.g., a running Ollama instance or an OpenRouter API key).
-*   Git (for cloning)
+- Python 3.8 or higher
+- An API key for OpenRouter (if used), set as an environment variable: `OPENROUTER_API_KEY`
+- A running Ollama instance (if used)
 
 ### Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/your-username/poor-ai-programming-tool.git
     cd poor-ai-programming-tool
     ```
 
-2.  **Install dependencies:**
-    *   Create a `requirements.txt` file with the following content:
-        ```
-        openai
-        pytest
-        ```
-    *   Install using pip:
-        ```bash
-        pip install -r requirements.txt
-        ```
+2.  **Set up a virtual environment:**
+    ```bash
+    python -m venv venv
+    # On Windows
+    venv\Scripts\activate
+    # On macOS/Linux
+    source venv/bin/activate
+    ```
 
-3.  **Configure Models:**
-    *   Edit `models.json` to define the AI models you want to use.
-    *   Ensure the `endpoint` is correct for your setup (e.g., `http://127.0.0.1:11434/v1` for local Ollama).
-    *   For providers like OpenRouter, add `"api_key_env_var": "YOUR_ENV_VAR_NAME"` to the model definition and set the corresponding environment variable:
-        ```bash
-        # Linux/macOS
-        export YOUR_ENV_VAR_NAME='your_api_key_here'
-        # Windows CMD
-        set YOUR_ENV_VAR_NAME=your_api_key_here
-        # Windows PowerShell
-        $env:YOUR_ENV_VAR_NAME="your_api_key_here"
-        ```
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-4.  **Configure Application (Optional):**
-    *   Edit `config.json` in the root directory to customize behavior:
-        ```json
-        {
-          "display_app": "code", // Editor to show request/response (e.g., "notepad", "gedit", "code")
-          "display_request_response": true // Set to true to automatically show API calls in the editor
-        }
-        ```
-        *(If `config.json` doesn't exist, defaults will be used, and request/response won't be displayed automatically)*
+4.  **Configure the tool:**
+    -   Copy `models.json.example` to `models.json` and configure your desired AI models.
+    -   Copy `config.json.example` to `config.json` and adjust settings like the text editor for viewing requests.
 
 ### Running the Tool
 
+To start the application, point it to a project folder. If the folder doesn't exist, the tool will help you create it.
+
 ```bash
-python poor_ai.py
+python poor_ai.py --project-folder /path/to/your/project
 ```
 
-This will start the interactive console. Logs are stored in the `logs/` directory.
+You will now be in the interactive CLI.
 
 ## Usage
 
-The tool operates via commands entered at its prompt: `[current_file] (Current Model)>`
+The tool operates through a simple set of commands in its interactive console.
 
-**Basic Workflow:**
+### Basic Workflow
 
-1.  **Select a model:** `model <model_name>` (e.g., `model gemma3:1b-it-qat`)
-2.  **Load a file:** `load path/to/your/code.py`
-3.  **(Optional) Select a template:** `template use <template_name>` (defaults to `default`)
-4.  **(Optional) Create/Edit descriptions:** `desc new path/to/your/code.py`, then `desc edit path/to/your/code.py`
-5.  **Generate or fix code:**
-    *   `gen write a function that adds two numbers`
-    *   `fix the loop condition is wrong`
-6.  **Review changes:** The modified code is held in memory.
-7.  **Save changes:** `save`
+1.  **Load files**: Load the files you want the AI to work on.
+    ```
+    > load src/main.py src/utils.py
+    ```
+    Or use wildcards:
+    ```
+    > load src/*.py
+    ```
 
-**Key Commands:**
+2.  **Define the task**: Describe what you want the AI to do. You can enter multi-line text; type `END` on a new line to finish.
+    ```
+    > task
+    Please add a function to utils.py called 'calculate_sum' that takes a list of numbers and returns their sum. Then, import and call this function in main.py.
+    END
+    ```
 
-*   `load <file_path>`: Load a file.
-*   `save`: Save changes to the loaded file.
-*   `gen <task>`: Generate code based on the task.
-*   `fix <issue>`: Fix an issue in the code.
-*   `template list | use <name> | new <name> | edit <name> | show [name]`: Manage templates.
-*   `context show`: Preview the context sent to the AI.
-*   `desc new <file> | edit <file> | view <file> <type>`: Manage descriptions (`type` is `short`, `long`, or `detailed`).
-*   `model list | <name>`: List or switch AI models.
-*   `test`: Run project tests using pytest.
-*   `help`: Show available commands.
-*   `exit`: Quit the tool.
+3.  **Generate code**: Run the generation command. The tool will build a prompt, send it to the AI, and apply the response.
+    ```
+    > gen
+    ```
 
-## Templates
+4.  **Save changes**: If you are satisfied with the changes, save them to disk.
+    ```
+    > save
+    ```
 
-Templates are stored in the `templates/` directory as `.txt` files. They use `{{placeholder}}` syntax to build context. See `docs/Poor AI Programming Tool Documentation.markdown` for details on placeholders.
+### Advanced. Generate project from dev guide.
+
+1.  **Create custom dev guide**: Edit file from 'docs/' folder, let it be `DevGuide_v1.2.md` with new features. 
+
+2.  **Create empty project**:
+    ```
+    python poor_ai.py --project-folder <new_folder>
+    ```
+
+    - Overwrite `<new_folder>/models.json` with your version of `models.json`
+    - Copy dev guide into `<new_folder>/DevGuide_v1.2.md`
+    
+3.  **Generate project**:
+    ```
+    > project set-name Poor AI Programming Tool v 1.2
+    > model list
+    > model use 1
+    > template use guide
+    > load DevGuide_v1.2.md
+    > context show
+    > gen
+    > save 
+    ```
+
+3.  **Update project files**:
+    ```
+    > clear
+    > template use main
+    > load poor_ai.py core/model_manager.py
+    > task Fix error: ....
+    > context show
+    > gen
+    > save 
+    ```
+
+### All Commands
+
+| Command                               | Description                                                                 |
+| ------------------------------------- | --------------------------------------------------------------------------- |
+| `load <files...>`                     | Load one or more files into the context (wildcards supported).              |
+| `save`                                | Save changes from the buffer to the actual files.                           |
+| `clear`                               | Clear all loaded files from the buffer.                                     |
+| `task <description>`                  | Set the task for the AI. Use `task` alone for multi-line input.             |
+| `gen`                                 | Generate code based on the current context, files, and task.                |
+| `context show`                        | Display the exact prompt that will be sent to the AI.                       |
+| `template list/use/show/new/edit`     | Manage prompt templates.                                                    |
+| `model list/use <name_or_index>`      | List available AI models or switch the active one.                          |
+| `project set-name <new_name>`         | Set the project's name in `project.json`.                                   |
+| `test`                                | Run `pytest` in the `tests/` directory.                                     |
+| `version`                             | Show the application's version.                                             |
+| `help`                                | Show the help message.                                                      |
+| `exit` / `quit`                       | Exit the application.                                                       |
+
+
+## Poor Bench
+`poor_bench` is a Python-based benchmarking framework designed to create, manage, and evaluate tests for Large Language Models (LLMs). It allows developers to define test classes with customizable prompt templates, generate tests across multiple difficulty levels, and evaluate results using modular evaluation components. The framework supports tailored prompts per LLM, initial test validation, and bulk test execution, with results scored on a 0.0 to 1.0 scale. Optimized for constrained systems, it operates as a standalone module within the `poor_ai` ecosystem, focusing on catching potential LLM issues early in development.
+
+Check out the sample model comparison chart:
+![Model Comparison: Average Score](poor_bench/images/llm_scores.png)
+
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+Contributions are welcome! If you have suggestions for improvements or want to add new features, please feel free to open an issue or submit a pull request.
+
+1.  Fork the repository.
+2.  Create a new branch (`git checkout -b feature/YourFeature`).
+3.  Commit your changes (`git commit -m 'Add some feature'`).
+4.  Push to the branch (`git push origin feature/YourFeature`).
+5.  Open a pull request.
 
 ## License
 
-*(Specify License Here - e.g., MIT License)* - Currently unlicensed.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

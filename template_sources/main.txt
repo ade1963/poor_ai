@@ -26,4 +26,4 @@
     }
   ]
   ```
-- "content": The file’s complete code as a string, with special characters (e.g., quotes, newlines) properly escaped to ensure valid JSON. 
+  - `content`: Full file code, escaped for valid JSON (e.g., quotes, newlines).

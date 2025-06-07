@@ -1,350 +1,162 @@
-# core/template_processor.py
 import os
-from pathlib import Path
 import re
-from typing import Optional, List
 import json
+import shutil
+import logging
+from pathlib import Path
+from typing import Optional
+
+from core.file_handler import FileHandler
+
+log = logging.getLogger(__name__)
 
 class TemplateProcessor:
-    def __init__(self, project_dir: str, templates_dir: str = 'templates', file_handler=None):
-        self.templates_dir = Path(project_dir) / templates_dir
-        self.project_dir = Path(project_dir)
-        self.file_handler = file_handler  # Inject FileHandler for artifacts
+    """Manages templates and processes placeholders for AI context."""
 
-    def create_template(self, name: str, content: str = "") -> bool:
-        """Create a new template file."""
+    def __init__(self, project_dir: Path, templates_dir: Path, file_handler: FileHandler, config: dict):
+        self.project_dir = project_dir
+        self.templates_dir = templates_dir
+        self.file_handler = file_handler
+        self.config = config
+        self._copy_initial_templates()
+
+    def _copy_initial_templates(self):
+        """Copies templates from a source folder to the project's templates dir."""
+        source_folder_name = self.config.get('templates_source_folder', 'template_sources')
+        # Source folder is relative to the script's directory, not the project directory
+        script_dir = Path(__file__).parent.parent
+        source_path = script_dir / source_folder_name
+
+        if not source_path.is_dir():
+            log.warning(f"Template source folder '{source_path}' not found. Skipping initial template copy.")
+            return
+
+        self.templates_dir.mkdir(exist_ok=True)
+
         try:
-            template_path = self.templates_dir / f"{name}.txt"
-            with open(template_path, 'w', encoding='utf-8') as f:
-                f.write(content or self._default_template())
-            return True
-        except Exception as e:
-            print(f"Error creating template: {e}")
-            return False
+            for item in source_path.iterdir():
+                if item.is_file() and item.suffix == '.txt':
+                    dest_file = self.templates_dir / item.name
+                    if not dest_file.exists(): # Don't overwrite user changes
+                        shutil.copy(item, dest_file)
+                        log.info(f"Copied initial template: {item.name}")
+        except OSError as e:
+            log.error(f"Error copying initial templates: {e}")
 
-    def _default_template(self) -> str:
-        """Return a default template content."""
-        return """Project structure:
-{{folder_schema:./}}
+    def list_templates(self) -> list[str]:
+        """Lists available .txt templates."""
+        if not self.templates_dir.exists():
+            return []
+        return [f.stem for f in self.templates_dir.glob('*.txt')]
 
-Project files:
-{{files_with_short_descriptions}}
-
-Artifacts:
-{{file_contents}}
-
-Description:
-{<!-- No short descriptions available -->}
-
-Task: {{task}}"""
-
-    def fill_template(self, template_name: str, current_file: Optional[str], project_name: str, task: str) -> str:
-        """Fill a template with actual content."""
-        template_path = self.templates_dir / f"{template_name}.txt"
-        if not template_path.exists():
-            print(f"Template {template_name} not found.")
-            return f"Task: {task}\nArtifacts:\n{self._get_artifacts()}"
-
-        with open(template_path, 'r', encoding='utf-8') as f:
-            template = f.read()
-
-        # Replace placeholders
-        template = self._replace_placeholders(template, current_file, project_name, task)
-        return template
-
-    def _replace_placeholders(self, template: str, current_file: Optional[str], project_name: str, task: str) -> str:
-        """Replace all placeholders in the template."""
-
-        def placeholder_replacer(match):
-            full_placeholder = match.group(0)
-            inner = match.group(1)
-            if inner == "project_name":
-                return project_name
-            if inner == "task":
-                return task
-            if inner == "current_file":
-                if current_file:
-                    current_file_path = Path(current_file)
-                    return self._read_file(current_file_path) or ''
-                else:
-                    if self.file_handler and self.file_handler.current_files:
-                        return self._get_artifacts()
-                    else:
-                        return '<!-- No files loaded -->'
-            if inner == "current_file_name":
-                if current_file:
-                    return Path(current_file).name
-                elif self.file_handler and self.file_handler.current_files:
-                    return ', '.join(Path(f).name for f in self.file_handler.current_files)
-                else:
-                    return '<!-- No files loaded -->'
-            if inner == "files_no_descriptions":
-                return self._get_files_no_descriptions()
-            if inner == "files_with_short_descriptions":
-                return self._get_files_with_short_descriptions()
-            if inner == "files_with_detailed_descriptions":
-                return self._get_files_with_detailed_descriptions()
-            if inner == "file_contents":
-                return self._get_artifacts()
-            if inner == "json_file_contents":
-                return self._get_json_file_contents()
-
-            # {{file:something}}
-            if inner.startswith("file:"):
-                file_path_str = inner[5:]
-                path = (self.project_dir / file_path_str.strip()).resolve()
-                return self._read_file(path) or f'<!-- File not found: {file_path_str} -->'
-            # {{folder_schema:something}}
-            if inner.startswith("folder_schema:"):
-                paths = inner[14:]
-                return self._get_folder_schema(paths.strip())
-            # {{desc_{desc_type}:{file_path}}}
-            m = re.match(r'desc_(short|long|detailed):(.*)', inner)
-            if m:
-                desc_type, file_path_str = m.groups()
-                desc = self.get_description(file_path_str.strip(), desc_type) or f'<!-- No {desc_type} description for {file_path_str} -->'
-                return desc
-            # {current_desc_*}
-            m = re.match(r'current_desc_(short|long|detailed)', inner)
-            if m:
-                desc_type = m.group(1)
-                if current_file:
-                    desc = self.get_description(current_file, desc_type) or f'<!-- No {desc_type} description for current file -->'
-                    return desc
-                elif self.file_handler and self.file_handler.current_files:
-                    descs = []
-                    for f in self.file_handler.current_files:
-                        desc = self.get_description(f, desc_type)
-                        if desc:
-                            descs.append(f"File: {Path(f).name}\n{desc}")
-                    desc_content = '\n\n'.join(descs) if descs else f'<!-- No {desc_type} descriptions available -->'
-                    return desc_content
-                else:
-                    return '<!-- No files loaded -->'
-
-            # Unknown placeholder: leave unchanged
-            return full_placeholder
-
-        # replace all {{...}} placeholders via regex in one sweep
-        result = re.sub(r'\{\{([^\}]+)\}\}', placeholder_replacer, template)
-        return result
-
-    def _get_json_file_contents(self) -> str:
-        """Generate JSON-formatted file contents for loaded files."""
-        if not self.file_handler or not self.file_handler.current_files:
-            return '[]'
-        
-        file_objects = []
-        for file_path in self.file_handler.current_files:
-            content = self.file_handler.contents.get(file_path, '')
-            # Use filename with project-relative path for 'filename', not just basename
+    def get_template_content(self, name: str) -> Optional[str]:
+        """Gets the content of a specific template."""
+        template_path = self.templates_dir / f"{name}.txt"
+        if template_path.exists():
             try:
-                relpath = str(Path(file_path).relative_to(self.project_dir))
-            except Exception:
-                relpath = str(Path(file_path))
-            # Determine language based on file extension
-            extension = Path(file_path).suffix.lower()
-            language_map = {
-                '.py': 'python',
-                '.js': 'javascript',
-                '.html': 'html',
-                '.css': 'css',
-                '.json': 'json',
-                '.md': 'markdown',
-                '.txt': 'text'
-            }
-            language = language_map.get(extension, '')
-            # Escape content to handle backticks
-            escaped_content = content.replace('\\u0060\\u0060\\u0060', '\\\u0060\\\u0060\\\u0060')
-            
-            file_objects.append({
-                'filename': relpath,
-                'language': language,
-                'content': escaped_content
-            })
-        
-        return json.dumps(file_objects, indent=2)
-
-    def _read_file(self, path: Path) -> Optional[str]:
-        """Read the content of a file."""
-        try:
-            path = path.resolve()
-            if path.exists() and path.is_file():
-                with open(path, 'r', encoding='utf-8') as f:
-                    return f.read()
-            return None
-        except Exception as e:
-            print(f"Error reading file {path}: {e}")
-            return None
-
-    def _get_folder_schema(self, paths: str) -> str:
-        """Generate a folder schema for the specified paths."""
-        schema = []
-        base_path = self.project_dir
-        for path_str in paths.split(','):
-            path = (base_path / path_str.strip()).resolve()
-            try:
-                if path.is_file():
-                    schema.append(f"- {path.relative_to(base_path)}")
-                elif path.is_dir():
-                    schema.append(f"+ {path.relative_to(base_path)}/")
-                    for item in sorted(path.rglob('*')):
-                        if item.is_file():
-                            relative_item_path = item.relative_to(path)
-                            indent = "  " * (len(relative_item_path.parts) - 1)
-                            schema.append(f"  {indent}- {item.relative_to(base_path)}")
-            except FileNotFoundError:
-                schema.append(f"[Path not found: {path_str.strip()}]")
-            except Exception as e:
-                schema.append(f"[Error processing path {path_str.strip()}: {e}]")
-
-        return '\n'.join(schema) if schema else 'No files or directories found for specified paths.'
-
-    def _get_artifacts(self) -> str:
-        """Retrieve the contents of all loaded files from FileHandler."""
-        if self.file_handler:
-            return self.file_handler.get_artifacts()
-        return "<!-- FileHandler not available or no files loaded -->"
-
-    def _get_files_no_descriptions(self) -> str:
-        """Retrieve the list of project files without descriptions from FileHandler."""
-        if self.file_handler:
-            try:
-                if self.file_handler.project_json.exists():
-                    with open(self.file_handler.project_json, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    files = data.get("files", [])
-                    if not files:
-                        return "No project files listed."
-                    return "\n".join(f"- {file['name']}" for file in files)
-                return "project.json not found."
-            except Exception as e:
-                return f"Error reading project.json: {e}"
-        return "No project files available."
-
-    def _get_files_with_short_descriptions(self) -> str:
-        """Retrieve the list of project files with short descriptions from FileHandler."""
-        if self.file_handler:
-            try:
-                if self.file_handler.project_json.exists():
-                    with open(self.file_handler.project_json, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    files = data.get("files", [])
-                    if not files:
-                        return "No project files listed."
-                    result = []
-                    for file in files:
-                        name = file.get("name", "Unknown")
-                        short = file.get("short", "No short description")
-                        result.append(f"- {name}")
-                        if short:
-                            result.append(f"  Short: {short}")
-                    return "\n".join(result)
-                return "project.json not found."
-            except Exception as e:
-                return f"Error reading project.json: {e}"
-        return "No project files available."
-
-    def _get_files_with_detailed_descriptions(self) -> str:
-        """Retrieve the list of project files with detailed descriptions from FileHandler."""
-        if self.file_handler:
-            try:
-                if self.file_handler.project_json.exists():
-                    with open(self.file_handler.project_json, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    files = data.get("files", [])
-                    if not files:
-                        return "No project files listed."
-                    result = []
-                    for file in files:
-                        name = file.get("name", "Unknown")
-                        detailed = file.get("detailed", "No detailed description")
-                        result.append(f"- {name}")
-                        if detailed:
-                            result.append(f"  Detailed: {detailed}")
-                    return "\n".join(result)
-                return "project.json not found."
-            except Exception as e:
-                return f"Error reading project.json: {e}"
-        return "No project files available."
-
-    def get_description(self, file_path: str, desc_type: str) -> str:
-        """Retrieve a specific description type from a description file."""
-        try:
-            abs_path = (self.project_dir / file_path).resolve()
-            desc_file = abs_path.with_suffix('.desc.md')
-            if not desc_file.exists():
-                return ""
-            with open(desc_file, 'r', encoding='utf-8') as f:
-                content = f.read()
-            return self._parse_description(content, desc_type)
-        except Exception as e:
-            print(f"Error getting description for {file_path}: {e}")
-            return ""
-
-    def _parse_description(self, content: str, desc_type: str) -> str:
-        """Parse the requested description type from markdown content."""
-        desc_type_upper = desc_type.upper()
-        pattern = re.compile(rf'<!--\s*{re.escape(desc_type_upper)}\s*-->(.*?)(?=<!--|\Z)', re.DOTALL | re.IGNORECASE)
-        match = pattern.search(content)
-        return match.group(1).strip() if match else ""
-
-    def create_description(self, file_path: str) -> bool:
-        """Create a new description file with default content."""
-        try:
-            abs_path = (self.project_dir / file_path).resolve()
-            desc_file = abs_path.with_suffix('.desc.md')
-            if desc_file.exists():
-                print(f"Description file {desc_file} already exists.")
-                return False
-            content = """<!-- SHORT -->
-Short description here.
-
-<!-- LONG -->
-Long description here.
-
-<!-- DETAILED -->
-Detailed description here.
-"""
-            desc_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(desc_file, 'w', encoding='utf-8') as f:
-                f.write(content)
-            print(f"Created description file: {desc_file.relative_to(self.project_dir)}")
-            return True
-        except Exception as e:
-            print(f"Error creating description for {file_path}: {e}")
-            return False
-
-    def edit_description(self, file_path: str) -> bool:
-        """Open the description file for editing (simulated)."""
-        abs_path = (self.project_dir / file_path).resolve()
-        desc_file = abs_path.with_suffix('.desc.md')
-        if not desc_file.exists():
-            print(f"Description file {desc_file} does not exist. Creating it first.")
-            created = self.create_description(file_path)
-            if not created:
-                return False
-        print(f"Please manually edit the description file: {desc_file.relative_to(self.project_dir)}")
-        return True
-
-    def view_description(self, file_path: str, desc_type: str) -> Optional[str]:
-        """View a specific description type."""
-        desc = self.get_description(file_path, desc_type)
-        if desc:
-            return desc
-        abs_path = (self.project_dir / file_path).resolve()
-        desc_file = abs_path.with_suffix('.desc.md')
-        if not desc_file.exists():
-            print(f"Description file not found: {desc_file.relative_to(self.project_dir)}")
-        else:
-            print(f"No '{desc_type}' description found in {desc_file.relative_to(self.project_dir)}")
+                return template_path.read_text(encoding='utf-8')
+            except IOError as e:
+                log.error(f"Error reading template {name}: {e}")
+                return None
+        log.warning(f"Template '{name}' not found.")
         return None
 
-    def list_templates(self) -> List[str]:
-        """List available template files."""
+    def create_template(self, name: str, content: str = "") -> bool:
+        """Creates a new template file."""
+        template_path = self.templates_dir / f"{name}.txt"
+        if template_path.exists():
+            log.warning(f"Template '{name}' already exists.")
+            return False
         try:
-            templates = [f.stem for f in self.templates_dir.glob('*.txt')]
-            return templates
-        except Exception as e:
-            print(f"Error listing templates: {e}")
-            return []
+            template_path.write_text(content, encoding='utf-8')
+            log.info(f"Created new template: {name}")
+            return True
+        except IOError as e:
+            log.error(f"Error creating template {name}: {e}")
+            return False
+
+    def fill_template(self, template_name: str, task: str) -> str:
+        """Fills a template with dynamic data."""
+        template_content = self.get_template_content(template_name)
+        if template_content is None:
+            log.error(f"Cannot fill template, as '{template_name}' was not found.")
+            # Fallback to a very basic prompt
+            template_content = "Task: {{task}}\n\nFiles:\n{{file_contents}}"
+
+        return self._replace_placeholders(template_content, task)
+
+    def _replace_placeholders(self, template_content: str, task: str) -> str:
+        """Replaces all known placeholders in the template string."""
+        # Simple placeholders
+        replacements = {
+            '{{project_name}}': self.file_handler.get_project_name(),
+            '{{task}}': task,
+            '{{current_file_name}}': ', '.join(self.file_handler.loaded_files.keys()),
+            '{{file_contents}}': self._get_formatted_file_contents(),
+            '{{json_file_contents}}': self._get_json_file_contents(),
+            '{{files_no_descriptions}}': self.file_handler.get_file_list_no_description(),
+            '{{files_with_short_descriptions}}': self.file_handler.get_project_files_with_descriptions('short'),
+            '{{files_with_detailed_descriptions}}': self.file_handler.get_project_files_with_descriptions('detailed'),
+        }
+
+        for placeholder, value in replacements.items():
+            template_content = template_content.replace(placeholder, value)
+
+        # Complex placeholders with arguments
+        template_content = re.sub(r'{{file:(.*?)}}', self._file_placeholder, template_content)
+        template_content = re.sub(r'{{folder_schema:(.*?)}}', self._folder_schema_placeholder, template_content)
+        
+        return template_content
+
+    def _get_formatted_file_contents(self) -> str:
+        """Gets loaded file contents formatted for a text prompt."""
+        parts = []
+        for filename, content in self.file_handler.get_loaded_files_content().items():
+            parts.append(f"`{filename}`:\n\u0060\u0060\u0060\n{content}\n\u0060\u0060\u0060")
+        return "\n\n".join(parts)
+
+    def _get_json_file_contents(self) -> str:
+        """Gets loaded file contents formatted as a JSON string."""
+        files_data = []
+        for filename, content in self.file_handler.get_loaded_files_content().items():
+            files_data.append({
+                'filename': filename,
+                'language': self.file_handler._guess_language(filename),
+                'content': content
+            })
+        return json.dumps(files_data, indent=2)
+
+    def _file_placeholder(self, match: re.Match) -> str:
+        """Replaces {{file:path}} with the content of that file."""
+        path_str = match.group(1).strip()
+        file_path = self.project_dir / path_str
+        if file_path.is_file():
+            try:
+                return file_path.read_text(encoding='utf-8')
+            except IOError as e:
+                log.error(f"Error reading file for placeholder {path_str}: {e}")
+                return f"[Error reading file: {path_str}]"
+        return f"[File not found: {path_str}]"
+
+    def _folder_schema_placeholder(self, match: re.Match) -> str:
+        """Replaces {{folder_schema:paths}} with a tree-like structure."""
+        paths_str = match.group(1).strip()
+        paths = [p.strip() for p in paths_str.split(',')]
+        schema = []
+        for p_str in paths:
+            path = self.project_dir / p_str
+            if path.is_dir():
+                schema.append(f"{p_str}/:")
+                for root, dirs, files in os.walk(path):
+                    level = root.replace(str(self.project_dir), '').count(os.sep)
+                    indent = ' ' * 4 * (level)
+                    sub_indent = ' ' * 4 * (level + 1)
+                    if Path(root) != path:
+                        schema.append(f'{indent}{os.path.basename(root)}/')
+                    for f in files:
+                        schema.append(f'{sub_indent}{f}')
+            elif path.is_file():
+                 schema.append(f"[Not a directory: {p_str}]\n")
+            else:
+                schema.append(f"[Path not found: {p_str}]\n")
+        return "\n".join(schema)

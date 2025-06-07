@@ -2,46 +2,82 @@
   "project_name": "Poor AI Programming Tool",
   "files": [
     {
+      "name": ".gitignore",
+      "short": "Standard .gitignore file for a Python project.",
+      "detailed": "This file tells Git which files and directories to ignore, such as virtual environments, bytecode files, log files, and user-specific configuration that shouldn't be committed to the repository.",
+      "language": "plaintext"
+    },
+    {
+      "name": "DevGuide_v1.1.md",
+      "short": null,
+      "detailed": null,
+      "language": "markdown"
+    },
+    {
+      "name": "README.md",
+      "short": "Project README file with overview, setup, and usage instructions.",
+      "detailed": "A comprehensive README for the project's GitHub repository. It explains what the Poor AI Programming Tool is, its key features, how to install and configure it, and provides clear usage examples. It also includes contribution guidelines and an MIT license.",
+      "language": "markdown"
+    },
+    {
+      "name": "config.json",
+      "short": "Default application configuration.",
+      "detailed": "This JSON file holds application-level settings, such as the default text editor for displaying requests and responses, a flag to enable or disable this feature, and the name of the source folder for prompt templates.",
+      "language": "json"
+    },
+    {
       "name": "core/file_handler.py",
-      "short": "Advanced file handler class with project JSON support, file loading, saving, and smart updating.",
-      "detailed": "This module provides the FileHandler class, which manages loading and saving files, updating and maintaining a project.json metadata file, supporting wildcards, file diffs, and the preservation of language-specific comments. Logging and careful error handling are included throughout.",
+      "short": "Manages all file I/O operations and project state.",
+      "detailed": "This class is responsible for loading files (with wildcard support), saving changes back to disk, applying AI-generated updates (including code, metadata, and diffs), and managing the central 'project.json' file. It ensures data consistency and handles the complexities of file system interactions and state tracking.",
       "language": "python"
     },
     {
       "name": "core/model_manager.py",
-      "short": "Manages AI models, API calls, and displays request/response interactions.",
-      "detailed": "Contains the ModelManager class for loading model/app configurations, switching models, and orchestrating prompt-response cycles across multiple providers (e.g., ollama, openrouter, fake). Handles API errors robustly, logs activity, and creates human-readable request-response logs for debugging or transparency.",
+      "short": "Manages interactions with various AI model providers.",
+      "detailed": "This powerful class handles all communication with AI models. It supports multiple providers (Ollama, OpenRouter, and a 'fake' provider for testing), manages API keys and endpoints from configuration files, and correctly formats requests for each provider\u2014including special parameters like 'think' for Ollama. It also includes logic for token counting, cost estimation, and displaying requests/responses for debugging.",
       "language": "python"
     },
     {
       "name": "core/prompt_processor.py",
-      "short": "Processes user commands into structured prompts for the AI model.",
-      "detailed": "Refactored for clarity and maintainability. Improved comments, type annotations, and logical flow. _parse_command and _build_context now have explicitly documented behavior. No functional change, but improved code readability and extension points.",
+      "short": "Parses user commands and builds AI prompts.",
+      "detailed": "This module acts as a bridge between the user's command-line input and the AI. It parses commands like 'gen' to extract the core task, then uses the TemplateProcessor to assemble the final, context-rich prompt that will be sent to the AI model.",
       "language": "python"
     },
     {
       "name": "core/response_processor.py",
-      "short": "Extractor for code and diffs from LLM or API responses, with JSON and various text/diff format handling.",
-      "detailed": "This file provides an extract_code function to parse file-content pairs from raw string responses that may be JSON arrays, code fences, diffs, or just textual blocks, handling many edge-cases for robust integration with code-gen and documentation LLM workflows. It escapes triple backticks in output and annotates artifacts with automatic UUIDs and format metadata. The module supports parsing standard code blocks and both unified and git diff formats, suitable for programmatic extraction of artifacts from LLM-driven outputs.",
+      "short": "Parses and extracts structured data from AI model responses.",
+      "detailed": "This module contains the logic for interpreting the raw text response from an AI. It intelligently searches for structured data, prioritizing complete JSON objects, then JSON code blocks, diff patches, and finally standard code blocks. This robust, multi-layered approach ensures that a usable result can be extracted even from imperfectly formatted AI outputs.",
       "language": "python"
     },
     {
       "name": "core/template_processor.py",
-      "short": "Template processing utility for injecting project and file information into templates, with support for descriptions and file handlers.",
-      "detailed": "Fixes the issue in _get_json_file_contents so that the 'filename' field, when replacing a placeholder, will contain the relative path (including directory) instead of just the basename. The rest of the code and logic remain unchanged and backward-compatible.",
+      "short": "Manages and processes prompt templates.",
+      "detailed": "This class handles all template-related logic. It initializes templates by copying them from a source directory, lists available templates, and, most importantly, fills them with dynamic data by replacing placeholders like '{{task}}' and '{{file_contents}}' with real-time information from the file handler and user input.",
       "language": "python"
+    },
+    {
+      "name": "models.json",
+      "short": "Default AI model configurations.",
+      "detailed": "This JSON file defines the AI models available to the tool. It includes configurations for different providers like Ollama and a 'fake' model for testing. Each model has settings for its provider, name, API endpoint, system prompt, and generation parameters like 'think' for Ollama.",
+      "language": "json"
     },
     {
       "name": "poor_ai.py",
-      "short": "Main CLI for Poor AI tool, handles user commands, manages project state, integrates with core components.",
-      "detailed": "This Python script implements the CLI application for the Poor AI Programming Tool, providing the main interactive command loop for users. It supports project folder structure validation, loading and saving files, AI generation, template and description management, model selection, and more. The script integrates with separate core modules (FileHandler, PromptProcessor, ModelManager, TemplateProcessor, extract_code). Extensive logging is set up (with log file rotation), and the application gracefully handles IO and user errors. When the user runs the tool, it parses commands, interacts with the core logic, and manages state for the current files, model, template, and task prompt. The code is modular, using methods for all major actions, and provides helpful command-line feedback.",
+      "short": "Main CLI entry point for the Poor AI Programming Tool.",
+      "detailed": "This is the central executable script that launches the application. It handles command-line argument parsing, initializes all core components (FileHandler, ModelManager, etc.), validates the project structure, and runs the main interactive command loop. It orchestrates the entire workflow by delegating user commands to the appropriate modules.",
       "language": "python"
     },
     {
-      "name": "test.txt",
-      "short": null,
-      "detailed": null,
-      "language": null
+      "name": "requirements.txt",
+      "short": "Python package requirements.",
+      "detailed": "Lists the external Python libraries required to run the project. Users can install all dependencies at once using 'pip install -r requirements.txt'.",
+      "language": "plaintext"
+    },
+    {
+      "name": "template_sources/main.txt",
+      "short": "The primary source template for AI prompts.",
+      "detailed": "This file is the master copy of the main prompt template. It's stored in the 'template_sources' directory and is copied into the project's 'templates' folder on initialization. It uses placeholders to structure the information sent to the AI, ensuring consistent and parsable responses.",
+      "language": "plaintext"
     }
   ]
 }
