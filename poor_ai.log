@@ -1,6 +1,0 @@
-2025-06-07 07:54:59,770 - __main__ - INFO - Initializing PoorAI
-2025-06-07 07:56:33,622 - __main__ - INFO - Processing command: gen
-2025-06-07 07:57:08,221 - __main__ - INFO - Received raw response from model
-2025-06-07 07:57:08,221 - __main__ - INFO - Parsed response into 3 file-content pairs
-2025-06-07 07:57:08,224 - __main__ - INFO - Saved request-response to E:\snake110\logs\request_20250607_075708_c8d9930a.txt
-2025-06-07 07:57:08,247 - __main__ - INFO - Applied processed result to FileHandler buffer
