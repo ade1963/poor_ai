@@ -1,0 +1,21 @@
+2025-06-07 07:55:10,307 - core.model_manager - INFO - Initializing ModelManager
+2025-06-07 07:55:10,310 - core.model_manager - INFO - Loaded models from models.json
+2025-06-07 07:55:10,331 - core.model_manager - ERROR - Error loading app config from config.json: Expecting property name enclosed in double quotes: line 4 column 1 (char 66)
+2025-06-07 07:55:10,331 - core.model_manager - INFO - Set default model: fake_model
+2025-06-07 07:55:10,331 - core.model_manager - INFO - Switched to model: fake_model
+2025-06-07 07:55:10,331 - core.model_manager - INFO - Retrieved current model: fake_model
+2025-06-07 07:55:52,040 - core.model_manager - INFO - Switched to model: gpt-4.1-2025-04-14
+2025-06-07 07:55:52,041 - core.model_manager - INFO - Retrieved current model: gpt-4.1-2025-04-14
+2025-06-07 07:55:52,042 - core.model_manager - INFO - Retrieved current model: gpt-4.1-2025-04-14
+2025-06-07 07:55:52,042 - core.model_manager - INFO - Retrieved current model: gpt-4.1-2025-04-14
+2025-06-07 07:56:33,625 - core.model_manager - INFO - Processing with provider ollama for model gpt-4.1-2025-04-14
+2025-06-07 07:56:33,625 - core.model_manager - INFO - Generating response for prompt: **[PROJECT NAME]**
+Snake Game
+
+**[TASK]**
+Develop ...
+2025-06-07 07:56:57,113 - core.model_manager - INFO - Response received successfully from ollama. Duration: 23.49s, Prompt Tokens: N/A, Completion Tokens: N/A, Cost: $0.000000
+2025-06-07 07:56:57,115 - core.model_manager - INFO - Displaying request/response using notepad
+2025-06-07 07:57:08,223 - core.model_manager - INFO - Retrieved current model: gpt-4.1-2025-04-14
+2025-06-07 07:57:08,223 - core.model_manager - INFO - Retrieved current model: gpt-4.1-2025-04-14
+2025-06-07 07:57:08,224 - core.model_manager - INFO - Retrieved current model: gpt-4.1-2025-04-14

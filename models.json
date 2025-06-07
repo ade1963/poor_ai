@@ -1,0 +1,181 @@
+{ "models": [
+    {
+      "provider":"fake",
+      "name": "fake_model",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 65536
+    },
+    {
+      "provider":"ollama",
+      "name": "gemma3:1b-it-qat",
+      "endpoint": "http://127.0.0.1:11434/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 16000
+    },
+    {
+      "provider":"ollama",
+      "name": "grok",
+      "endpoint": "https://api.llm7.io/v1",
+      "system_prompt":"",
+      "max_tokens": 128000
+    },
+    {
+      "provider":"ollama",
+      "name": "phi-4-multilmodal-instruct",
+      "endpoint": "https://api.llm7.io/v1",
+      "system_prompt":"",
+      "max_tokens": 128000
+    },
+    {
+      "provider":"ollama",
+      "name": "gpt-4.1-nano-2025-04-14",
+      "endpoint": "https://api.llm7.io/v1",
+      "system_prompt":"",
+      "max_tokens": 128000
+    },
+    {
+      "provider":"ollama",
+      "name": "gpt-4.1-mini-2025-04-14",
+      "endpoint": "https://api.llm7.io/v1",
+      "system_prompt":"",
+      "max_tokens": 128000
+    },
+    {
+      "provider":"ollama",
+      "name": "gpt-4.1-2025-04-14",
+      "endpoint": "https://api.llm7.io/v1",
+      "system_prompt":"",
+      "max_tokens": 512000
+    },
+    {
+      "provider":"ollama",
+      "name": "granite3.3:8b",
+      "endpoint": "http://46.29.236.116:8183/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 16000
+    },
+    {
+      "provider":"ollama",
+      "name": "qwen3:8b-fp16",
+      "endpoint": "http://46.29.236.116:8183/v1",
+      "system_prompt":"/no_thinking Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 16000
+    },
+    {
+      "provider":"ollama",
+      "name": "gemma3:12b-it-qat",
+      "endpoint": "http://46.29.236.116:8183/v1",
+      "system_prompt":"",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 16000
+    },
+    {
+      "provider":"openrouter",
+      "name": "qwen/qwen3-235b-a22b:free",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 32678
+    },
+    {
+      "provider":"openrouter",
+      "name": "google/gemini-2.5-pro-exp-03-25",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.02
+      },
+      "max_tokens": 256000
+    },
+    {
+      "provider":"openrouter",
+      "name": "google/gemini-2.5-flash-preview",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 0.15,
+        "output_tokens": 0.6
+      },
+      "max_tokens": 256000
+    },
+    {
+      "provider":"openrouter",
+      "name": "google/gemini-2.5-pro-preview",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "temperature": 1.0,
+      "top_k": 64,
+      "top_p": 0.95,
+      "pricing": {
+        "input_tokens": 1.25,
+        "output_tokens": 10.0
+      },
+      "max_tokens": 256000
+    },
+    {
+      "provider":"openrouter",
+      "name": "google/gemini-2.5-flash-preview-05-20",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
+      "mode":"no_thinking",
+      "pricing": {
+        "input_tokens": 0.15,
+        "output_tokens": 0.6
+      },
+      "max_tokens": 256000
+    }
+  ]
+}

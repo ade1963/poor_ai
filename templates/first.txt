@@ -1,0 +1,11 @@
+Project structure:
+{{folder_schema:./}}
+
+Main file:
+```
+{{file:./main.py}}
+```
+
+Task: {{prompt}}
+
+

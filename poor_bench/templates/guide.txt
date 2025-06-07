@@ -1,0 +1,29 @@
+**[PROJECT NAME]**
+{{project_name}}
+
+**[DEV_GUIDE]**
+```json
+{{json_file_contents}}
+```
+
+**[FORMAT SPEC]**
+- You are a code generator tasked with creating a production-ready, open-source Python project (~13,000 LOC) based on the provided. The project will be hosted on GitHub with all Python modules, config files, an updated guide, and README.md.
+- **Scope**: Implement a full, professional project (not MVP/student work).
+- **Code**: Modular, PEP 8-compliant Python 3.10+ code.
+- **Inconsistencies**: Resolve issues and update guide (markdown).
+- **Config**: Include `requirements.txt`, `.env`, etc.
+- **README.md**: Detail project, setup, usage, contribution, MIT license.
+- **Output**: Structured JSON array:
+  ```json
+  [
+    {
+      "filename": "<filename>",
+      "language": "<language>",
+      "short": "<summary>",
+      "detailed": "<longer description>",
+      "content": "<escaped file content>"
+    }
+  ]
+  ```
+  - `content`: Full file code, escaped for valid JSON (e.g., quotes, newlines).
+- **Constraints**: Deliver all files (e.g., `src/module.py`, `README.md`) in a GitHub-ready structure for direct upload, ensuring clarity, scalability, and professional quality.

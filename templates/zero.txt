@@ -1,0 +1,34 @@
+[TASK]
+{{task}}
+
+[PROJECT FILES]
+{{project}}
+
+[REMINDER]
+Please ALWAYS write the filenames, then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.
+
+[EXTRA]
+After code, add an extra file named `descriptions.json`. It must be a JSON array describing each file with:
+- `file`: filename,
+- `short`: 1-line summary or `null`,
+- `detailed`: paragraph or `null`.
+
+Use `null` for all if file is trivial.
+
+Example:
+
+descriptions.json
+```
+[
+  {
+    "file": "index.html",
+    "short": "Main HTML page.",
+    "detailed": "Basic HTML shell with a root div for the app. Loads JS and CSS files."
+  },
+  {
+    "file": "reset.css",
+    "short": null,
+    "detailed": null
+  }
+]
+```

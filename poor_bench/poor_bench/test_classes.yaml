@@ -1,0 +1,37 @@
+version: "1.0"
+test_classes:
+  - id: "math_problems"
+    description: "Tests for solving mathematical problems"
+    work_prompt_template:
+      default: "Solve this math problem and return your answer in JSON format with key 'answer': {problem}"
+      overrides:
+        "ollama:gemma3:1b-it-qat": "Solve this and return JSON with 'answer': {problem}"
+    evaluation_module:
+      name: "math_evaluator"
+      parameters:
+        precision: 2
+        expected_format: "json"
+  - id: "sentiment_analysis"
+    description: "Tests for determining sentiment of texts"
+    work_prompt_template:
+      default: "Analyze the sentiment of these texts and return a JSON list of sentiments 'positive', 'negative' or 'neutral': {texts}. Example output: [\"negative\",\"positive\"]"
+    evaluation_module:
+      name: "sentiment_evaluator"
+      parameters:
+        response_format: "list_of_sentiments"
+  - id: "python_coding"
+    description: "Tests for writing Python code to solve programming problems"
+    work_prompt_template:
+      default: "Write a Python function that {task}. Include docstrings and comments where appropriate. Ensure the function is self-contained and does not rely on external libraries unless specified."
+    evaluation_module:
+      name: "python_evaluator"
+      parameters: {}
+  - id: "foreign_language_sentiment"
+    description: "Tests for determining sentiment of phrases in foreign languages (French, German, Russian, Spanish, Italian)"
+    work_prompt_template:
+      default_bad: "Analyze the sentiment of these texts in their respective languages (French, German, Russian, Spanish, Italian) and return a JSON list of sentiments 'positive', 'negative' or 'neutral': {texts}. Example output: [\"negative\",\"positive\"]"
+      default: "Analyze the sentiment of these texts and return a JSON list of sentiments 'positive', 'negative' or 'neutral': {texts}. Example output: [\"negative\",\"positive\"]"
+    evaluation_module:
+      name: "sentiment_evaluator"
+      parameters:
+        response_format: "list_of_sentiments"
