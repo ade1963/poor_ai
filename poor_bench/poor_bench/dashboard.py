@@ -176,8 +176,10 @@ def create_dashboard(file_path, llm_file_path='llms.json'):
         fig.update_layout(xaxis_tickangle=45)
         
         # Create model comparison plot
+        # Sort model_totals by size
+        model_totals_sorted = model_totals.sort_values('size')
         # Reshape model_totals for grouped bar chart
-        comparison_df = model_totals.melt(
+        comparison_df = model_totals_sorted.melt(
             id_vars=['model'],
             value_vars=['avg_score', 'pass_rate'],
             var_name='Metric',
@@ -200,7 +202,8 @@ def create_dashboard(file_path, llm_file_path='llms.json'):
         comparison_fig.update_layout(
             xaxis_tickangle=45,
             legend_title_text='Metric',
-            yaxis_title='Value (Score: 0.0-1.0, Pass Rate: %)'
+            yaxis_title='Value (Score: 0.0-1.0, Pass Rate: %)',
+            xaxis={'categoryorder': 'array', 'categoryarray': model_totals_sorted['model'].tolist()}
         )
         
         # Prepare table data

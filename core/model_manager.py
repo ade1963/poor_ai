@@ -6,6 +6,7 @@ import subprocess
 import tempfile
 import time
 import requests
+import sys
 from pathlib import Path
 from typing import Optional, Dict, Any
 from logging.handlers import RotatingFileHandler
@@ -24,9 +25,10 @@ class ModelManager:
     def __init__(self, models_config_path: Path, app_config_path: Path, project_dir: Path):
         self.project_dir = project_dir
         self._setup_logging()
+        self.script_dir = Path(sys.argv[0]).parent.resolve()
 
         self.app_config = self._load_app_config(app_config_path)
-        self.models = self._load_models(models_config_path)
+        self.models = self._load_models(self.script_dir / 'models.json' if (self.script_dir / 'models.json').exists() else models_config_path)
         self.current_model = None
         self._set_default_model()
 
@@ -263,7 +265,9 @@ class ModelManager:
         pricing = self.current_model.get('pricing', {})
         input_cost = token_info.get('prompt_tokens', 0) * pricing.get('input_tokens', 0)
         output_cost = token_info.get('completion_tokens', 0) * pricing.get('output_tokens', 0)
-        return input_cost + output_cost
+        cost = input_cost + output_cost
+        if not cost: cost = '0.0'
+        return float(cost)
 
     def _display_request_response(self, request: str, response: str):
         try:

@@ -1,4 +1,4 @@
-# Poor AI Programming Tool Developer Guide v1.1
+# Poor AI Programming Tool Developer Guide v1.1.1
 
 ## Overview
 
@@ -29,7 +29,7 @@ poor_ai/
 │   ├── template_processor.py # Template management and placeholder processing
 ├── templates/              # Directory for template files (e.g., main.txt)
 ├── template_sources/       # Source folder for template files (configurable in config.json)
-├── models.json             # AI model configurations
+├── models.json             # AI model configurations (stored in script directory, not copied to project)
 ├── config.json             # Application settings (display, template source)
 ├── project.json            # Tracks project files and metadata (dynamic)
 ├── requirements.txt        # Python dependencies
@@ -48,7 +48,7 @@ poor_ai/
   - `__init__(project_folder)`: Initializes the project folder, logging, and core components (`FileHandler`, `TemplateProcessor`, `PromptProcessor`, `ModelManager`). The `--project-folder` argument is parsed via `argparse` and used to set the project directory for all operations.
   - `_setup_logging()`: Configures a rotating file handler for `poor_ai.log` (10MB, 5 backups).
   - `_validate_project_structure()`: Ensures the existence of `project.json`, `templates/`, and `logs/`, creating them with user confirmation if missing.
-  - `load_models_config()`: Loads AI model configurations from `models.json` in the project directory if present; otherwise, falls back to the script directory.
+  - `load_models_config()`: Loads AI model configurations from `models.json` in the script directory (where `poor_ai.py` is located); falls back to the project directory only if not found in the script directory.
   - `initialize_model_manager(model_name)`: Sets the active AI model, defaulting to the first in `models.json`.
   - `_save_request_response(prompt_data, raw_result, token_info, cost)`: Logs AI request-response pairs with metadata (model, tokens, cost) to `logs/request_<timestamp>_<uuid>.txt`.
   - `run()`: Runs the CLI loop, processing commands and optional initial arguments.

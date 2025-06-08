@@ -86,7 +86,7 @@ class PoorAI:
                 sys.exit(1)
 
         # Create default config files from examples if they don't exist
-        for filename in ['config.json', 'models.json']:
+        for filename in ['config.json']:
             project_file = self.project_dir / filename
             script_file = current_dir / filename
             if not project_file.exists() and script_file.exists():
@@ -111,7 +111,7 @@ class PoorAI:
         return {}
 
     def _initialize_model_manager(self) -> ModelManager:
-        models_path = self.project_dir / 'models.json'
+        models_path = current_dir / 'models.json'
         config_path = self.project_dir / 'config.json'
         return ModelManager(models_path, config_path, self.project_dir)
 
