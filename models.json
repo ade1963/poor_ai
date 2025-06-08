@@ -63,7 +63,7 @@
     {
       "provider":"ollama",
       "name": "granite3.3:8b",
-      "endpoint": "http://46.29.236.116:8183/v1",
+      "endpoint": "http://127.0.0.1:11434/v1",
       "system_prompt":"Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
       "mode":"no_thinking",
       "temperature": 1.0,
@@ -78,7 +78,7 @@
     {
       "provider":"ollama",
       "name": "qwen3:8b-fp16",
-      "endpoint": "http://46.29.236.116:8183/v1",
+      "endpoint": "http://127.0.0.1:11434/v1",
       "system_prompt":"/no_thinking Please write the filename on the first line (e.g. main.py), then the code in triple backticks on the next lines. For markdown content that includes triple backticks, use four backticks (````) to wrap the content. Do NOT include language hints or explanations.",
       "mode":"no_thinking",
       "temperature": 1.0,
@@ -93,7 +93,7 @@
     {
       "provider":"ollama",
       "name": "gemma3:12b-it-qat",
-      "endpoint": "http://46.29.236.116:8183/v1",
+      "endpoint": "http://127.0.0.1:11434/v1",
       "system_prompt":"",
       "mode":"no_thinking",
       "temperature": 1.0,

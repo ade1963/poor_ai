@@ -195,7 +195,7 @@ Defines LLMs and their parameters.
     {
       "provider": "ollama",
       "name": "deepseek-r1:1.5b-qwen-distill-fp16",
-      "endpoint": "http://46.29.236.116:8183/v1",
+      "endpoint": "http://127.0.0.1:11434/v1",
       "base_system_prompt": "You are an AI for structured tasks.",
       "size": 3.6,
       "parameters": {
