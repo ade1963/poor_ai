@@ -2,251 +2,171 @@
   "llms": [
     {
       "provider": "ollama",
-      "name": "qwen3:0.6b-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 1.5, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:0.6b-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 1.5, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95,
-        "think": true
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:1.7b-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 4.1, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:1.7b-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 4.1, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95,
-        "think": true
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:8b-q4_K_M", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 5.2, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:8b-q4_K_M", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 5.2, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95,
-        "think": true
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:8b-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 16.0, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "qwen3:8b-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 16.0, 
-      "parameters": {
-        "temperature": 0.6,
-        "top_k": 20,
-        "top_p": 0.95,
-        "think": true
-      }
-    },
-    {
-      "provider": "ollama",
       "name": "gemma3:1b-it-qat", 
-      "endpoint": "http://127.0.0.1:11434",
+      "endpoint": "http://46.29.236.116:8183",
       "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
       "size": 1.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "gemma3:12b-it-qat", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 8.9, 
-      "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95
       }
     },
     {
       "provider": "ollama",
       "name": "granite3.3:2b", 
-      "endpoint": "http://127.0.0.1:11434",
+      "endpoint": "http://46.29.236.116:8183",
       "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
       "size": 1.5, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95
+      }
+    },
+    {
+      "provider": "ollama",
+      "name": "qwen3:1.7b-fp16", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 4.1, 
+      "parameters": {
+        "think": false
+      }
+    },
+    {
+      "provider": "ollama",
+      "name": "qwen3:1.7b-fp16", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 4.1, 
+      "parameters": {
+        "think": true
       }
     },
     {
       "provider": "ollama",
       "name": "granite3.3:8b", 
-      "endpoint": "http://127.0.0.1:11434",
+      "endpoint": "http://46.29.236.116:8183",
       "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
       "size": 4.9, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95
       }
     },
     {
       "provider": "ollama",
-      "name": "deepseek-r1:1.5b-qwen-distill-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
-      "size": 3.6, 
+      "name": "magistral:24b-small-2506-q8_0", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 25.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95,
         "think": false
       }
     },
     {
       "provider": "ollama",
-      "name": "deepseek-r1:1.5b-qwen-distill-fp16", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
-      "size": 3.6, 
+      "name": "magistral:24b-small-2506-q4_K_M", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 14.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95,
+        "think": false
+      }
+    },
+    {
+      "provider": "ollama",
+      "name": "magistral:24b-small-2506-q4_K_M", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 14.0, 
+      "parameters": {
         "think": true
       }
     },
     {
       "provider": "ollama",
-      "name": "deepseek-r1:14b-qwen-distill-q8_0", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
-      "size": 15.0, 
+      "name": "deepseek-r1:8b-0528-qwen3-fp16", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 16.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95,
+        "max_tokens": 2048,
         "think": false
       }
     },
     {
       "provider": "ollama",
-      "name": "deepseek-r1:14b-qwen-distill-q8_0", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
-      "size": 15.0, 
+      "name": "deepseek-r1:8b-0528-qwen3-fp16", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 16.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95,
+        "max_tokens": 2048,
         "think": true
       }
     },
     {
       "provider": "ollama",
-      "name": "deepseek-r1:7b-qwen-distill-q8_0", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
-      "size": 8.1, 
+      "name": "magistral:24b-small-2506-q8_0", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 25.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95,
-        "think": false
-      }
-    },
-    {
-      "provider": "ollama",
-      "name": "deepseek-r1:7b-qwen-distill-q8_0", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
-      "size": 8.1, 
-      "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95,
         "think": true
       }
     },
     {
       "provider": "ollama",
       "name": "devstral:24b-small-2505-q4_K_M", 
-      "endpoint": "http://127.0.0.1:11434",
-      "base_system_prompt": "Respond in the exact format requested. No markdown, no LaTeX, no explanations, no code blocks. Output only the required structure.",
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
       "size": 14.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95
+        "think": false
+      }
+    },
+    {
+      "provider": "ollama",
+      "name": "gemma3:12b-it-qat", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 8.9, 
+      "parameters": {
+        "think": false
+      }
+    },
+    {
+      "provider": "ollama",
+      "name": "qwen3:8b-fp16", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 16.0, 
+      "parameters": {
+        "think": false
+      }
+    },
+    {
+      "provider": "ollama",
+      "name": "granite3.3:8b", 
+      "endpoint": "http://46.29.236.116:8183",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 4.9, 
+      "parameters": {
+        "think": false
       }
     },
     {
       "provider": "llm7",
-      "name": "phi-4", 
+      "name": "mistral-small-3.1-24b-instruct-2503", 
       "endpoint": "https://api.llm7.io/v1",
       "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 28.0, 
+      "size": 48.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_p": 0.95
+        "think": false
+      }
+    },
+    {
+      "provider": "llm7",
+      "name": "qwen2.5-coder-32b-instruct", 
+      "endpoint": "https://api.llm7.io/v1",
+      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
+      "size": 64.0, 
+      "parameters": {
+        "think": false
       }
     },
     {
@@ -256,30 +176,7 @@
       "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
       "size": 500.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "llm7",
-      "name": "gpt-4.1-mini-2025-04-14", 
-      "endpoint": "https://api.llm7.io/v1",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 1500.0, 
-      "parameters": {
-        "temperature": 1.0,
-        "top_p": 0.95
-      }
-    },
-    {
-      "provider": "llm7",
-      "name": "gpt-4.1-2025-04-14", 
-      "endpoint": "https://api.llm7.io/v1",
-      "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
-      "size": 15000.0, 
-      "parameters": {
-        "temperature": 1.0,
-        "top_p": 0.95
+        "think": false
       }
     },
     {
@@ -289,9 +186,7 @@
       "base_system_prompt": "You are an AI for structured tasks. Return responses in the exact format requested. Be concise and accurate, with no extra text.",
       "size": 16.0, 
       "parameters": {
-        "temperature": 1.0,
-        "top_k": 64,
-        "top_p": 0.95
+        "think": false
       }
     }
   ]

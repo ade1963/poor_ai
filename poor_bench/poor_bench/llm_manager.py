@@ -88,7 +88,7 @@ class LLMManager:
         if api_key:
             headers["Authorization"] = f"Bearer {api_key}"
         try:
-            resp = requests.post(f"{endpoint}/chat/completions", headers=headers, json=payload, timeout=60*20) # 20 min
+            resp = requests.post(f"{endpoint}/chat/completions", headers=headers, json=payload, timeout=60*10) # 10 min
             resp.raise_for_status()
         except Exception as e:
             raise RuntimeError(f"OpenAI API call failed: {e}")
@@ -109,46 +109,30 @@ class LLMManager:
         endpoint = llm_config["endpoint"].rstrip('/')
         model = llm_config["name"]
     
-        syspt = ''
-        if system_prompt or llm_config.get("base_system_prompt"):
-            syspt = system_prompt or llm_config.get("base_system_prompt")
+        if not system_prompt:
+            system_prompt = system_prompt or llm_config.get("base_system_prompt")
     
-        messages = [{"role": "system", "content": syspt}] if syspt else []
-        messages.append({"role": "user", "content": prompt})
-    
+        options = {}
+        options.update({k: v for k, v in parameters.items() if k != "think"})
         payload = {
             "model": model,
-            "messages": messages,
+            "prompt": prompt,
+            "system": system_prompt,
             "think": parameters.get("think", False),
             "stream": False,
+            "options": options
         }
-        payload.update({k: v for k, v in parameters.items() if k in ("temperature", "top_p", "max_tokens")})
         headers = {"Content-Type": "application/json"}
     
         try:
-            resp = requests.post(f"{endpoint}/api/chat", headers=headers, json=payload, timeout=60*20) # 20 min
+            resp = requests.post(f"{endpoint}/api/generate", headers=headers, json=payload, timeout=60*10) # 10 min
             resp.raise_for_status()
         except Exception as e:
             raise RuntimeError(f"Ollama API call failed: {e}")
     
-        # Fix: handle possible JSON streaming response
-        try:
-            # Try parsing line-by-line if multiple JSON objects exist
-            lines = resp.text.strip().splitlines()
-            for line in lines:
-                if not line.strip():
-                    continue
-                try:
-                    data = json.loads(line)
-                    # Defensive: Try to extract message content
-                    if "message" in data and "content" in data["message"]:
-                        return data["message"]["content"]
-                except json.JSONDecodeError:
-                    continue
-            # Fallback: Return raw response text if nothing parsed
-            return resp.text
-        except Exception as e:
-            raise RuntimeError(f"[Ollama Parse Error] {e}")
+        data = resp.json()
+        return data["response"]
+    
     
     def _call_openai_compartible(
         self,

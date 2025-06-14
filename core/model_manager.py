@@ -207,12 +207,12 @@ class ModelManager:
             log.error("OPENROUTER_API_KEY environment variable not set.")
             print("Error: OPENROUTER_API_KEY is not set.")
             return None
-
+    
         client = openai.OpenAI(
             base_url=self.current_model['endpoint'],
             api_key=api_key,
         )
-
+    
         try:
             completion = client.chat.completions.create(
                 model=self.current_model['name'],
@@ -220,10 +220,10 @@ class ModelManager:
                 **self.current_model.get('parameters', {})
             )
             content = completion.choices[0].message.content
-            token_usage = getattr(content, 'usage', None)
+            token_usage = getattr(completion, 'usage', None)  # Fixed: Use completion instead of content
             token_info = {
-                'prompt_tokens': token_usage.prompt_tokens if token_usage else 'N/A',
-                'completion_tokens': token_usage.completion_tokens if token_usage else 'N/A'
+                'prompt_tokens': token_usage.prompt_tokens if token_usage else 0,
+                'completion_tokens': token_usage.completion_tokens if token_usage else 0
             }
             cost = self._calculate_cost(token_info)
             return content, token_info, cost
@@ -263,11 +263,25 @@ class ModelManager:
 
     def _calculate_cost(self, token_info: dict) -> float:
         pricing = self.current_model.get('pricing', {})
-        input_cost = token_info.get('prompt_tokens', 0) * pricing.get('input_tokens', 0)
-        output_cost = token_info.get('completion_tokens', 0) * pricing.get('output_tokens', 0)
-        cost = input_cost + output_cost
-        if not cost: cost = '0.0'
-        return float(cost)
+        
+        # Safely convert token counts to integers, defaulting to 0 if not numeric
+        prompt_tokens = 0
+        completion_tokens = 0
+        
+        try:
+            prompt_tokens = int(token_info.get('prompt_tokens', 0))
+        except (ValueError, TypeError):
+            log.warning(f"Invalid prompt_tokens value: {token_info.get('prompt_tokens')}. Defaulting to 0.")
+        
+        try:
+            completion_tokens = int(token_info.get('completion_tokens', 0))
+        except (ValueError, TypeError):
+            log.warning(f"Invalid completion_tokens value: {token_info.get('completion_tokens')}. Defaulting to 0.")
+        
+        input_cost = prompt_tokens * pricing.get('input_tokens', 0.0)
+        output_cost = completion_tokens * pricing.get('output_tokens', 0.0)
+        
+        return float(input_cost + output_cost)/1000000
 
     def _display_request_response(self, request: str, response: str):
         try:

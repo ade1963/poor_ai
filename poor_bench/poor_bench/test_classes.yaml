@@ -29,9 +29,16 @@ test_classes:
   - id: "foreign_language_sentiment"
     description: "Tests for determining sentiment of phrases in foreign languages (French, German, Russian, Spanish, Italian)"
     work_prompt_template:
-      default_bad: "Analyze the sentiment of these texts in their respective languages (French, German, Russian, Spanish, Italian) and return a JSON list of sentiments 'positive', 'negative' or 'neutral': {texts}. Example output: [\"negative\",\"positive\"]"
       default: "Analyze the sentiment of these texts and return a JSON list of sentiments 'positive', 'negative' or 'neutral': {texts}. Example output: [\"negative\",\"positive\"]"
     evaluation_module:
       name: "sentiment_evaluator"
       parameters:
         response_format: "list_of_sentiments"
+  - id: "diff_generation"
+    description: "Tests for generating unified diff format output"
+    work_prompt_template:
+      bad_default: "Generate a unified diff for the given file changes. Return the diff as plain text with proper headers and hunk markers: {text}"
+      default: "Generate a unified diff for the given file changes. Return the diff as plain text with proper headers and hunk markers: {text}\nExample output:\n--- sample.txt\n+++ sample.txt\n@@ -1,3 +1,3 @@\n..."
+    evaluation_module:
+      name: "diff_evaluator"
+      parameters: {}

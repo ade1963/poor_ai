@@ -45,6 +45,32 @@
       }
     },
     {
+      "provider":"openrouter",
+      "name": "mistralai/mistral-nemo",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt": "You are a helpful AI assistant. Provide concise JSON-formatted code and descriptions as requested.",
+      "parameters": {
+        "max_tokens": 128000
+      },
+      "pricing": {
+        "input_tokens": 0.01,
+        "output_tokens": 0.027
+      }
+    },
+    {
+      "provider":"openrouter",
+      "name": "google/gemini-2.5-pro-preview",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "system_prompt": "You are a helpful AI assistant. Provide concise JSON-formatted code and descriptions as requested.",
+      "parameters": {
+        "max_tokens": 256000
+      },
+      "pricing": {
+        "input_tokens": 1.25,
+        "output_tokens": 10.0
+      }
+    },
+    {
       "provider": "fake",
       "name": "fake_model",
       "endpoint": "",

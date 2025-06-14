@@ -1,13 +1,14 @@
 **[PROJECT NAME]**
 {{project_name}}
 
-**[DEV_GUIDE]**
-```json
-{{json_file_contents}}
-```
+**[TASK]**
+{{task}}
+
+**[PROJECT FILE LIST]**
+{{files_with_short_descriptions}}
 
 **[FORMAT SPEC]**
-- You are a code generator tasked with creating a production-ready, open-source Python project (~13,000 LOC) based on the provided. The project will be hosted on GitHub with all Python modules, config files, an updated guide, and README.md.
+- You are a code generator tasked with creating a production-ready, open-source Python project (~13,000 LOC) based on the dev guide provided. The project will be hosted on GitHub with all Python modules, config files, an updated guide, and README.md.
 - **Scope**: Implement a full, professional project (not MVP/student work).
 - **Code**: Modular, PEP 8-compliant Python 3.10+ code.
 - **Inconsistencies**: Resolve issues and update guide (markdown).

@@ -178,31 +178,19 @@ def create_dashboard(file_path, llm_file_path='llms.json'):
         # Create model comparison plot
         # Sort model_totals by size
         model_totals_sorted = model_totals.sort_values('size')
-        # Reshape model_totals for grouped bar chart
-        comparison_df = model_totals_sorted.melt(
-            id_vars=['model'],
-            value_vars=['avg_score', 'pass_rate'],
-            var_name='Metric',
-            value_name='Value'
-        )
-        comparison_df['Metric'] = comparison_df['Metric'].replace(
-            {'avg_score': 'Average Score', 'pass_rate': 'Pass Rate (%)'}
-        )
         comparison_fig = px.bar(
-            comparison_df,
+            model_totals_sorted,
             x='model',
-            y='Value',
-            color='Metric',
-            barmode='group',
-            title='Model Comparison: Average Score and Pass Rate',
-            labels={'model': 'Model', 'Value': 'Value'},
-            height=1200,  # Set height to 3x default (400px * 3)
-            color_discrete_map={'Average Score': '#1f77b4', 'Pass Rate (%)': '#ff7f0e'}
+            y='avg_score',
+            title='Model Comparison: Average Score (Models Ordered by Size)',
+            labels={'model': 'Model', 'avg_score': 'Average Score'},
+            height=800,
+            color='avg_score',
+            color_continuous_scale='Blues'
         )
         comparison_fig.update_layout(
             xaxis_tickangle=45,
-            legend_title_text='Metric',
-            yaxis_title='Value (Score: 0.0-1.0, Pass Rate: %)',
+            yaxis_title='Average Score (0.0-1.0)',
             xaxis={'categoryorder': 'array', 'categoryarray': model_totals_sorted['model'].tolist()}
         )
         
